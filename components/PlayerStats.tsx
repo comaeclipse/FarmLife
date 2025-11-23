@@ -1,7 +1,7 @@
 'use client';
 
 import { getXPProgress } from '@/lib/game-logic';
-import { Coins, Zap, TrendingUp, CloudSun, Sunrise, Sunset, Moon, Sun } from 'lucide-react';
+import { Coins, Zap, TrendingUp, CloudSun, Sunrise, Sunset, Moon, Sun, Grid3x3 } from 'lucide-react';
 
 interface PlayerStatsProps {
   player: {
@@ -11,6 +11,8 @@ interface PlayerStatsProps {
     coins: number;
     energy: number;
     maxEnergy: number;
+    farmRows?: number;
+    farmCols?: number;
   };
   gameState: {
     day: number;
@@ -58,6 +60,19 @@ export function PlayerStats({ player, gameState }: PlayerStatsProps) {
             <p className="text-xl font-mono-game text-emerald-400">{player.level}</p>
           </div>
         </div>
+
+        {/* Farm Size */}
+        {player.farmRows !== undefined && player.farmCols !== undefined && (
+          <div className="col-span-2 flex items-center gap-3">
+            <Grid3x3 size={24} className="text-green-400" />
+            <div>
+              <p className="text-xs text-stone-400 uppercase font-bold">Farm Size</p>
+              <p className="text-xl font-mono-game text-green-400">
+                {player.farmRows}x{player.farmCols} ({player.farmRows * player.farmCols} plots)
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Energy Bar */}
         <div className="col-span-2">

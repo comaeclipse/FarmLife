@@ -30,6 +30,11 @@ export async function plantCropAction(
       return { success: false, error: 'Player not found' };
     }
 
+    // Validate plot coordinates are within farm bounds
+    if (plotX < 0 || plotX >= player.farmCols || plotY < 0 || plotY >= player.farmRows) {
+      return { success: false, error: 'Plot is outside your farm. Expand your farm to unlock more plots!' };
+    }
+
     // Check energy
     if (player.energy < ENERGY_COSTS.PLANT_CROP) {
       return { success: false, error: 'Not enough energy' };

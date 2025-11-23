@@ -44,10 +44,15 @@ export default async function CropsPage() {
 
       {/* Main Content */}
       <main className="p-4 md:p-6 max-w-7xl mx-auto">
-        <FarmGrid 
-          playerId={player.id} 
-          crops={player.crops || []} 
-          inventory={player.inventory || []} 
+        <FarmGrid
+          playerId={player.id}
+          crops={player.crops || []}
+          inventory={player.inventory || []}
+          farmRows={player.farmRows}
+          farmCols={player.farmCols}
+          playerLevel={player.level}
+          playerCoins={player.coins}
+          playerEnergy={player.energy}
         />
       </main>
     </div>

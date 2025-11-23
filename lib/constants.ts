@@ -8,6 +8,7 @@ export const GAME_CONFIG = {
   // XP and leveling
   BASE_XP_FOR_LEVEL: 100,
   XP_MULTIPLIER: 1.5,
+  MAX_LEVEL: 20,
 
   // Starting resources
   STARTING_COINS: 500,
@@ -166,3 +167,13 @@ export const SEASON_EFFECTS = {
     description: 'Harsh winter, crops grow 50% slower',
   },
 } as const;
+
+// Farm expansion tiers
+export const FARM_EXPANSION_TIERS = [
+  { level: 1, rows: 1, cols: 1, coinCost: 0, energyCost: 0 },       // Starting size
+  { level: 2, rows: 2, cols: 2, coinCost: 100, energyCost: 10 },   // 4 plots
+  { level: 4, rows: 3, cols: 3, coinCost: 100, energyCost: 10 },   // 9 plots
+  { level: 7, rows: 4, cols: 4, coinCost: 200, energyCost: 20 },   // 16 plots
+  { level: 11, rows: 5, cols: 5, coinCost: 200, energyCost: 20 },  // 25 plots
+  { level: 16, rows: 5, cols: 6, coinCost: 400, energyCost: 40 },  // 30 plots (max)
+] as const;

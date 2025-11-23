@@ -2,6 +2,7 @@
 
 import { prisma } from '../prisma';
 import { GAME_CONFIG, CROP_DATA } from '../constants';
+import { getLevelFromXP } from '../game-logic';
 
 /**
  * Create a new player with initial game state
@@ -13,6 +14,8 @@ export async function createPlayer(name: string) {
       energy: GAME_CONFIG.STARTING_ENERGY,
       maxEnergy: GAME_CONFIG.MAX_ENERGY,
       coins: GAME_CONFIG.STARTING_COINS,
+      farmRows: 1,
+      farmCols: 1,
       gameState: {
         create: {
           day: 1,
@@ -137,10 +140,10 @@ export async function addPlayerXP(playerId: string, xp: number) {
   if (!player) throw new Error('Player not found');
 
   const newXP = player.xp + xp;
-  let newLevel = player.level;
 
-  // Simple leveling: every 100 XP = 1 level
-  newLevel = Math.floor(newXP / 100) + 1;
+  // Use exponential leveling formula with max level cap
+  const calculatedLevel = getLevelFromXP(newXP);
+  const newLevel = Math.min(calculatedLevel, GAME_CONFIG.MAX_LEVEL);
 
   return await prisma.player.update({
     where: { id: playerId },
@@ -169,7 +172,10 @@ export async function updatePlayerStats(
   if (!player) throw new Error('Player not found');
 
   const newXP = updates.xp !== undefined ? player.xp + updates.xp : player.xp;
-  const newLevel = Math.floor(newXP / 100) + 1;
+
+  // Use exponential leveling formula with max level cap
+  const calculatedLevel = getLevelFromXP(newXP);
+  const newLevel = Math.min(calculatedLevel, GAME_CONFIG.MAX_LEVEL);
 
   return await prisma.player.update({
     where: { id: playerId },

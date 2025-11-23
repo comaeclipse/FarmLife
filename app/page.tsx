@@ -58,6 +58,8 @@ export default async function Home() {
               coins: player.coins,
               energy: player.energy,
               maxEnergy: player.maxEnergy,
+              farmRows: player.farmRows,
+              farmCols: player.farmCols,
             }}
             gameState={player.gameState}
           />
