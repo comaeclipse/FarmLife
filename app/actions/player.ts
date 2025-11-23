@@ -9,6 +9,7 @@ import * as eventsDb from '@/lib/db/events';
 import * as choresDb from '@/lib/db/chores';
 import { generateRandomEvent, shouldAdvanceDay, getCropGrowthStage } from '@/lib/game-logic';
 import { CROP_DATA, GAME_CONFIG, LIVESTOCK_DATA } from '@/lib/constants';
+import { generateTickerItems } from '@/lib/ticker-items';
 
 /**
  * Initialize or get player
@@ -39,7 +40,15 @@ export async function processDailyUpdateAction(playerId: string) {
     }
 
     // Advance the day
-    await gamestateDb.advanceDay(playerId);
+    const updatedGameState = await gamestateDb.advanceDay(playerId);
+
+    // Generate new ticker items for the day
+    const tickerItems = generateTickerItems({
+      day: updatedGameState.day,
+      season: updatedGameState.season,
+      year: updatedGameState.year,
+    });
+    await gamestateDb.updateGameState(playerId, { tickerItems });
 
     // Reset player energy
     await playerDb.updatePlayerEnergy(playerId, GAME_CONFIG.MAX_ENERGY);

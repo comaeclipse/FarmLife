@@ -6,6 +6,8 @@ import { Shop } from '@/components/Shop';
 import { ChoresList } from '@/components/ChoresList';
 import { EventLog } from '@/components/EventLog';
 import { QuickActions } from '@/components/QuickActions';
+import { NewsTicker } from '@/components/NewsTicker';
+import { generateTickerItems } from '@/lib/ticker-items';
 import { Home as HomeIcon, Sprout, ShoppingBag, ClipboardList } from 'lucide-react';
 import Link from 'next/link';
 
@@ -28,15 +30,31 @@ export default async function Home() {
 
   const player = playerResult.player;
 
+  // Get ticker items from gameState or generate new ones
+  let tickerItems: string[] = [];
+  if (player.gameState?.tickerItems && Array.isArray(player.gameState.tickerItems)) {
+    tickerItems = player.gameState.tickerItems as string[];
+  } else if (player.gameState) {
+    // Generate initial ticker items if not present
+    tickerItems = generateTickerItems({
+      day: player.gameState.day,
+      season: player.gameState.season,
+      year: player.gameState.year,
+    });
+  }
+
   return (
     <div className="h-screen flex flex-col bg-stone-900 text-stone-200 overflow-hidden">
       {/* Header */}
-      <header className="bg-stone-950 border-b border-stone-800 p-4 flex justify-between items-center relative z-20">
-        <div className="flex items-center gap-2">
+      <header className="bg-stone-950 border-b border-stone-800 p-4 flex items-center gap-4 relative z-20">
+        <div className="flex items-center gap-2 flex-shrink-0">
           <HomeIcon size={20} className="text-emerald-500" />
           <h1 className="font-bold text-lg tracking-wide">{player.name}&apos;s Farm</h1>
         </div>
-        <nav className="flex items-center gap-2">
+        <div className="flex-1 min-w-0">
+          <NewsTicker items={tickerItems} />
+        </div>
+        <nav className="flex items-center gap-2 flex-shrink-0">
           <Link
             href="/crops"
             className="flex items-center gap-2 px-3 py-1.5 bg-stone-800 hover:bg-stone-700 border border-stone-600 rounded transition-colors text-sm"

@@ -23,11 +23,15 @@ export async function updateGameState(
     year?: number;
     timeOfDay?: TimeOfDay;
     lastPlayed?: Date;
+    tickerItems?: string[];
   }
 ) {
   return await prisma.gameState.update({
     where: { playerId },
-    data: updates,
+    data: {
+      ...updates,
+      tickerItems: updates.tickerItems !== undefined ? updates.tickerItems : undefined,
+    },
   });
 }
 

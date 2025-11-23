@@ -222,13 +222,14 @@ enum TimeOfDay {
 
 // Game state (time, season, etc.)
 model GameState {
-  id         String    @id @default(cuid())
-  playerId   String    @unique
-  day        Int       @default(1)
-  season     Season    @default(SPRING)
-  year       Int       @default(1)
-  timeOfDay  TimeOfDay @default(MORNING)
-  lastPlayed DateTime  @default(now())
+  id          String    @id @default(cuid())
+  playerId    String    @unique
+  day         Int       @default(1)
+  season      Season    @default(SPRING)
+  year        Int       @default(1)
+  timeOfDay   TimeOfDay @default(MORNING)
+  lastPlayed  DateTime  @default(now())
+  tickerItems Json?
 
   player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
 
