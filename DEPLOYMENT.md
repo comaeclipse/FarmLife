@@ -17,13 +17,19 @@
 
 ### 2. Configure Environment Variables
 
-In your Vercel project settings, add these environment variables:
+**IMPORTANT**: Add these BEFORE clicking Deploy!
 
-```
-DATABASE_URL = postgresql://neondb_owner:npg_OSy0dipQ2wJz@ep-lively-rain-ad016ucj-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require
+During import or in Project Settings → Environment Variables, add:
 
-DIRECT_URL = postgresql://neondb_owner:npg_OSy0dipQ2wJz@ep-lively-rain-ad016ucj.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require
-```
+**Name:** `DATABASE_URL`
+**Value:** `postgresql://neondb_owner:npg_OSy0dipQ2wJz@ep-lively-rain-ad016ucj-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require`
+**Environment:** Production, Preview, Development (select all)
+
+**Name:** `DIRECT_URL`
+**Value:** `postgresql://neondb_owner:npg_OSy0dipQ2wJz@ep-lively-rain-ad016ucj.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require`
+**Environment:** Production, Preview, Development (select all)
+
+Make sure to click "Add" after each variable!
 
 ### 3. Build Settings
 
