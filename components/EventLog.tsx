@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { CloudRain, User, Paw, Sprout, DollarSign, Sparkles, FileText } from 'lucide-react';
+import { CloudRain, User, PawPrint, Sprout, DollarSign, Sparkles, FileText } from 'lucide-react';
 
 interface Event {
   id: string;
@@ -29,7 +29,7 @@ export function EventLog({ events }: EventLogProps) {
       case 'VISITOR':
         return <User size={14} className="text-purple-400" />;
       case 'ANIMAL_EVENT':
-        return <Paw size={14} className="text-amber-400" />;
+        return <PawPrint size={14} className="text-amber-400" />;
       case 'CROP_EVENT':
         return <Sprout size={14} className="text-green-400" />;
       case 'MARKET':

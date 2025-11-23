@@ -7,7 +7,7 @@ import { Shop } from '@/components/Shop';
 import { ChoresList } from '@/components/ChoresList';
 import { EventLog } from '@/components/EventLog';
 import { QuickActions } from '@/components/QuickActions';
-import { Home, Moon } from 'lucide-react';
+import { Home as HomeIcon } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,7 +33,7 @@ export default async function Home() {
       {/* Header */}
       <header className="bg-stone-950 border-b border-stone-800 p-4 flex justify-between items-center relative z-20">
         <div className="flex items-center gap-2">
-          <Home size={20} className="text-emerald-500" />
+          <HomeIcon size={20} className="text-emerald-500" />
           <h1 className="font-bold text-lg tracking-wide">{player.name}&apos;s Farm</h1>
         </div>
         <div className="flex items-center gap-4 text-sm text-stone-400">
