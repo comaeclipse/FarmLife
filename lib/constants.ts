@@ -32,6 +32,14 @@ export const ENERGY_COSTS = {
   COLLECT_PRODUCT: 3,
   CLEAR_WEEDS: 10,
   REPAIR_FENCE: 15,
+  // Flock actions
+  FEED_FLOCK: 10,
+  COLLECT_FLOCK_PRODUCTS: 5,
+  // Horse actions
+  FEED_HORSE: 4,
+  GROOM_HORSE: 6,
+  TRAIN_HORSE: 10,
+  RIDE_HORSE: 8,
 } as const;
 
 // XP rewards
@@ -42,6 +50,13 @@ export const XP_REWARDS = {
   FEED_ALL_ANIMALS: 15,
   COMPLETE_CHORE: 10,
   COLLECT_PRODUCT: 8,
+  // Flock rewards
+  FEED_FLOCK: 10,
+  COLLECT_FLOCK_PRODUCTS: 12,
+  // Horse rewards
+  GROOM_HORSE: 8,
+  TRAIN_HORSE: 15,
+  RIDE_HORSE: 12,
 } as const;
 
 // Crop data
@@ -104,7 +119,7 @@ export const CROP_DATA = {
   },
 } as const;
 
-// Livestock data
+// Livestock data (DEPRECATED - use FLOCK_DATA instead)
 export const LIVESTOCK_DATA = {
   CHICKEN: {
     name: 'Chicken',
@@ -146,6 +161,77 @@ export const LIVESTOCK_DATA = {
     productionDays: 2,
     emoji: '🐐',
   },
+} as const;
+
+// Flock data (group animals)
+export const FLOCK_DATA = {
+  CHICKEN: {
+    name: 'Chicken',
+    namePlural: 'Chickens',
+    costPerAnimal: 100,
+    product: 'EGG',
+    productValue: 15,
+    productionDays: 1,
+    maxFlockSize: 50,
+    emoji: '🐔',
+    feedPerAnimal: 1,
+  },
+  COW: {
+    name: 'Cow',
+    namePlural: 'Cows',
+    costPerAnimal: 500,
+    product: 'MILK',
+    productValue: 50,
+    productionDays: 2,
+    maxFlockSize: 20,
+    emoji: '🐄',
+    feedPerAnimal: 2,
+  },
+  SHEEP: {
+    name: 'Sheep',
+    namePlural: 'Sheep',
+    costPerAnimal: 300,
+    product: 'WOOL',
+    productValue: 40,
+    productionDays: 3,
+    maxFlockSize: 30,
+    emoji: '🐑',
+    feedPerAnimal: 1,
+  },
+  PIG: {
+    name: 'Pig',
+    namePlural: 'Pigs',
+    costPerAnimal: 400,
+    product: 'MEAT',
+    productValue: 80,
+    productionDays: 5,
+    maxFlockSize: 25,
+    emoji: '🐷',
+    feedPerAnimal: 2,
+  },
+  GOAT: {
+    name: 'Goat',
+    namePlural: 'Goats',
+    costPerAnimal: 250,
+    product: 'MILK',
+    productValue: 35,
+    productionDays: 2,
+    maxFlockSize: 30,
+    emoji: '🐐',
+    feedPerAnimal: 1,
+  },
+} as const;
+
+// Horse data (individual animals)
+export const HORSE_DATA = {
+  cost: 2000,
+  emoji: '🐴',
+  groomingDecayPerDay: 10,
+  bondingDecayPerDay: 2,
+  trainingGainPerSession: 5,
+  bondingGainFromGrooming: 2,
+  bondingGainFromTraining: 3,
+  bondingGainFromRiding: 5,
 } as const;
 
 // Season effects (for future expansion)

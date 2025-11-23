@@ -49,6 +49,8 @@ export async function getPlayer(playerId: string) {
     include: {
       crops: true,
       livestock: true,
+      flocks: true,
+      horses: true,
       inventory: true,
       chores: {
         where: { completed: false },
@@ -73,6 +75,8 @@ export async function getOrCreatePlayer(name: string = 'Farmer') {
     include: {
       crops: true,
       livestock: true,
+      flocks: true,
+      horses: true,
       inventory: true,
       chores: {
         where: { completed: false },
@@ -95,6 +99,8 @@ export async function getOrCreatePlayer(name: string = 'Farmer') {
     include: {
       crops: true,
       livestock: true,
+      flocks: true,
+      horses: true,
       inventory: true,
       chores: {
         where: { completed: false },

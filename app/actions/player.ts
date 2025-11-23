@@ -5,10 +5,12 @@ import * as playerDb from '@/lib/db/player';
 import * as gamestateDb from '@/lib/db/gamestate';
 import * as cropsDb from '@/lib/db/crops';
 import * as livestockDb from '@/lib/db/livestock';
+import * as flockDb from '@/lib/db/flocks';
+import * as horseDb from '@/lib/db/horses';
 import * as eventsDb from '@/lib/db/events';
 import * as choresDb from '@/lib/db/chores';
 import { generateRandomEvent, shouldAdvanceDay, getCropGrowthStage } from '@/lib/game-logic';
-import { CROP_DATA, GAME_CONFIG, LIVESTOCK_DATA } from '@/lib/constants';
+import { CROP_DATA, GAME_CONFIG, LIVESTOCK_DATA, FLOCK_DATA, HORSE_DATA } from '@/lib/constants';
 import { generateTickerItems } from '@/lib/ticker-items';
 
 /**
@@ -66,7 +68,7 @@ export async function processDailyUpdateAction(playerId: string) {
     // Reset daily watering status
     await cropsDb.resetDailyWatering(playerId);
 
-    // Update animals
+    // Update animals (DEPRECATED - old livestock system)
     const livestock = await livestockDb.getPlayerLivestock(playerId);
     for (const animal of livestock) {
       // Decrease hunger and happiness if not fed
@@ -89,6 +91,56 @@ export async function processDailyUpdateAction(playerId: string) {
 
     // Reset daily animal status
     await livestockDb.resetDailyAnimalStatus(playerId);
+
+    // Update flocks
+    const flocks = await flockDb.getPlayerFlocks(playerId);
+    for (const flock of flocks) {
+      // Decrease hunger and happiness if not fed
+      const hungerChange = flock.fedToday ? 0 : -20;
+      const happinessChange = flock.fedToday ? 0 : -10;
+
+      // Calculate production (each animal in flock produces individually)
+      const daysSinceAcquired = Math.floor(
+        (Date.now() - flock.acquiredAt.getTime()) / (1000 * 60 * 60 * 24)
+      );
+      const flockData = FLOCK_DATA[flock.type];
+      const shouldProduce = daysSinceAcquired % flockData.productionDays === 0;
+
+      // Each animal that was fed can produce
+      const animalsReady = shouldProduce && flock.fedToday ? flock.count : 0;
+
+      await flockDb.updateFlockStats(flock.id, {
+        hunger: Math.max(0, flock.hunger + hungerChange),
+        happiness: Math.max(0, flock.happiness + happinessChange),
+        productionReady: animalsReady,
+      });
+    }
+
+    // Reset daily flock status
+    await flockDb.resetDailyFlockStatus(playerId);
+
+    // Update horses
+    const horses = await horseDb.getPlayerHorses(playerId);
+    for (const horse of horses) {
+      // Decrease hunger if not fed
+      const hungerChange = horse.fedToday ? 0 : -20;
+      // Decrease happiness if not groomed
+      const happinessChange = horse.groomedToday ? 0 : -10;
+      // Grooming decays daily
+      const groomingChange = horse.groomedToday ? 0 : -HORSE_DATA.groomingDecayPerDay;
+      // Bonding decays slowly if not interacted with
+      const bondingChange = (horse.riddenToday || horse.trainedToday || horse.groomedToday) ? 0 : -HORSE_DATA.bondingDecayPerDay;
+
+      await horseDb.updateHorseStats(horse.id, {
+        hunger: Math.max(0, horse.hunger + hungerChange),
+        happiness: Math.max(0, horse.happiness + happinessChange),
+        grooming: Math.max(0, horse.grooming + groomingChange),
+        bonding: Math.max(0, horse.bonding + bondingChange),
+      });
+    }
+
+    // Reset daily horse status
+    await horseDb.resetDailyHorseStatus(playerId);
 
     // Generate random event
     const randomEvent = generateRandomEvent();

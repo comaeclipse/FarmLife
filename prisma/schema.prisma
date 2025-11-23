@@ -26,6 +26,8 @@ model Player {
 
   crops      Crop[]
   livestock  Livestock[]
+  flocks     Flock[]
+  horses     Horse[]
   inventory  InventoryItem[]
   chores     ChoreLog[]
   events     GameEvent[]
@@ -84,7 +86,7 @@ enum LivestockType {
   GOAT
 }
 
-// Livestock on the farm
+// Livestock on the farm (DEPRECATED - use Flock or Horse instead)
 model Livestock {
   id              String        @id @default(cuid())
   playerId        String
@@ -102,6 +104,57 @@ model Livestock {
   player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
 
   @@map("livestock")
+}
+
+// Flock animal types (group-based animals)
+enum FlockType {
+  CHICKEN
+  COW
+  SHEEP
+  PIG
+  GOAT
+}
+
+// Flocks/Herds of animals
+model Flock {
+  id              String    @id @default(cuid())
+  playerId        String
+  type            FlockType
+  count           Int       @default(1)
+  maxCount        Int       @default(50)
+  health          Int       @default(100)
+  happiness       Int       @default(100)
+  hunger          Int       @default(100)
+  fedToday        Boolean   @default(false)
+  productionReady Int       @default(0) // Number of animals ready to produce
+  producedToday   Boolean   @default(false)
+  acquiredAt      DateTime  @default(now())
+
+  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@map("flocks")
+}
+
+// Individual horses (premium animals with special care)
+model Horse {
+  id            String   @id @default(cuid())
+  playerId      String
+  name          String   // Required for horses
+  health        Int      @default(100)
+  happiness     Int      @default(100)
+  hunger        Int      @default(100)
+  grooming      Int      @default(100) // Grooming level (decays daily)
+  training      Int      @default(0)   // Training level (0-100)
+  bonding       Int      @default(0)   // Bonding level with player (0-100)
+  fedToday      Boolean  @default(false)
+  groomedToday  Boolean  @default(false)
+  trainedToday  Boolean  @default(false)
+  riddenToday   Boolean  @default(false)
+  acquiredAt    DateTime @default(now())
+
+  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@map("horses")
 }
 
 // Resource types for inventory

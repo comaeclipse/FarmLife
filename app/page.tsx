@@ -1,6 +1,8 @@
 import { initializePlayerAction } from './actions/player';
 import { PlayerStats } from '@/components/PlayerStats';
 import { LivestockList } from '@/components/LivestockList';
+import { FlockList } from '@/components/FlockList';
+import { HorseList } from '@/components/HorseList';
 import { Inventory } from '@/components/Inventory';
 import { Shop } from '@/components/Shop';
 import { ChoresList } from '@/components/ChoresList';
@@ -87,8 +89,15 @@ export default async function Home() {
         {/* Main Content Area */}
         <main className="flex-1 p-4 md:p-6 overflow-y-auto">
           <div className="space-y-6">
-            <LivestockList playerId={player.id} livestock={player.livestock || []} />
-            
+            {/* Old Livestock (deprecated - will be empty for new players) */}
+            {player.livestock && player.livestock.length > 0 && (
+              <LivestockList playerId={player.id} livestock={player.livestock} />
+            )}
+
+            {/* New Flock and Horse Systems */}
+            <FlockList playerId={player.id} flocks={player.flocks || []} />
+            <HorseList playerId={player.id} horses={player.horses || []} />
+
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               <ChoresList playerId={player.id} chores={player.chores || []} />
               <Inventory inventory={player.inventory || []} />
