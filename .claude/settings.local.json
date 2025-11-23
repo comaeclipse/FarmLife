@@ -16,7 +16,8 @@
       "Bash(git branch:*)",
       "Bash(git push:*)",
       "Bash(npx prisma generate:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []
