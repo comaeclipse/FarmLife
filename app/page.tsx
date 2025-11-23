@@ -1,13 +1,13 @@
 import { initializePlayerAction } from './actions/player';
 import { PlayerStats } from '@/components/PlayerStats';
-import { FarmGrid } from '@/components/FarmGrid';
 import { LivestockList } from '@/components/LivestockList';
 import { Inventory } from '@/components/Inventory';
 import { Shop } from '@/components/Shop';
 import { ChoresList } from '@/components/ChoresList';
 import { EventLog } from '@/components/EventLog';
 import { QuickActions } from '@/components/QuickActions';
-import { Home as HomeIcon } from 'lucide-react';
+import { Home as HomeIcon, Sprout, ShoppingBag, ClipboardList } from 'lucide-react';
+import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,9 +36,15 @@ export default async function Home() {
           <HomeIcon size={20} className="text-emerald-500" />
           <h1 className="font-bold text-lg tracking-wide">{player.name}&apos;s Farm</h1>
         </div>
-        <div className="flex items-center gap-4 text-sm text-stone-400">
-          <span className="hidden md:inline">FarmLife RPG</span>
-        </div>
+        <nav className="flex items-center gap-2">
+          <Link
+            href="/crops"
+            className="flex items-center gap-2 px-3 py-1.5 bg-stone-800 hover:bg-stone-700 border border-stone-600 rounded transition-colors text-sm"
+          >
+            <Sprout size={16} />
+            <span className="hidden md:inline">Crops</span>
+          </Link>
+        </nav>
       </header>
 
       <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
@@ -61,7 +67,6 @@ export default async function Home() {
         {/* Main Content Area */}
         <main className="flex-1 p-4 md:p-6 overflow-y-auto">
           <div className="space-y-6">
-            <FarmGrid playerId={player.id} crops={player.crops || []} inventory={player.inventory || []} />
             <LivestockList playerId={player.id} livestock={player.livestock || []} />
             
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
