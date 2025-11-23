@@ -9,13 +9,11 @@ const globalForPrisma = globalThis as unknown as {
 }
 
 // Configure for Vercel Edge/Serverless
-if (process.env.VERCEL_ENV === 'production' || process.env.VERCEL_ENV === 'preview') {
-  // Use fetch for Vercel serverless
-  neonConfig.fetchConnectionCache = true
-} else {
-  // Use WebSocket for local development
-  neonConfig.webSocketConstructor = ws
-}
+// fetchConnectionCache is deprecated (now always true), so we don't need to set it manually.
+// We explicitly set the WebSocket constructor to 'ws' to ensure compatibility in Node.js environments,
+// preventing potential TypeErrors with the native WebSocket implementation in some runtimes.
+neonConfig.webSocketConstructor = ws
+
 
 const createPrismaClient = () => {
   const pool = new Pool({ connectionString: process.env.DATABASE_URL })
