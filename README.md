@@ -115,6 +115,19 @@ npm run dev
 
 Visit `http://localhost:3000` to play the game!
 
+## Deployment to Vercel
+
+FarmLife is optimized for Vercel deployment! See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions.
+
+**Quick deploy:**
+
+1. Push your code to GitHub
+2. Import project to Vercel
+3. Add environment variables (`DATABASE_URL`, `DIRECT_URL`)
+4. Deploy!
+
+Your game will be live at `your-project.vercel.app` in minutes.
+
 ## Project Structure
 
 ```
