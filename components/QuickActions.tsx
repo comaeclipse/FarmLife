@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { waterAllCropsAction } from '@/app/actions/crops';
 import { restAction, processDailyUpdateAction } from '@/app/actions/player';
+import { Droplets, Bed, Sunrise, Shovel } from 'lucide-react';
 
 interface QuickActionsProps {
   playerId: string;
@@ -56,37 +57,43 @@ export function QuickActions({ playerId }: QuickActionsProps) {
   };
 
   return (
-    <div className="border border-green-700 bg-green-950/30 p-4 rounded">
-      <h2 className="text-xl font-bold text-green-400 mb-3">Quick Actions</h2>
+    <div className="bg-stone-800 border border-stone-700 rounded-lg p-4">
+      <h3 className="text-sm font-bold text-stone-400 uppercase mb-3 flex items-center gap-2">
+        <Shovel size={16} /> Quick Actions
+      </h3>
 
       <div className="space-y-2">
         <button
           onClick={handleWaterAll}
           disabled={loading}
-          className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-700 rounded text-sm font-bold"
+          className="w-full bg-stone-700 hover:bg-stone-600 text-left px-3 py-2 rounded flex items-center gap-2 group transition-colors disabled:opacity-50"
         >
-          💧 Water All Crops
+          <Droplets size={16} className="text-blue-400" />
+          <span>Water All Crops</span>
         </button>
 
         <button
           onClick={handleRest}
           disabled={loading}
-          className="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-700 rounded text-sm font-bold"
+          className="w-full bg-stone-700 hover:bg-stone-600 text-left px-3 py-2 rounded flex items-center gap-2 group transition-colors disabled:opacity-50"
         >
-          😴 Rest (+30 Energy)
+          <Bed size={16} className="text-purple-400" />
+          <span>Rest</span>
+          <span className="text-xs text-stone-400 bg-stone-900 px-2 py-0.5 rounded ml-auto">+30</span>
         </button>
 
         <button
           onClick={handleNewDay}
           disabled={loading}
-          className="w-full px-4 py-2 bg-yellow-600 hover:bg-yellow-700 disabled:bg-gray-700 rounded text-sm font-bold"
+          className="w-full bg-stone-700 hover:bg-stone-600 text-left px-3 py-2 rounded flex items-center gap-2 group transition-colors disabled:opacity-50"
         >
-          🌅 Start New Day
+          <Sunrise size={16} className="text-amber-400" />
+          <span>Start New Day</span>
         </button>
       </div>
 
-      <div className="mt-3 pt-3 border-t border-green-800">
-        <p className="text-xs text-gray-400">
+      <div className="mt-3 pt-3 border-t border-stone-700">
+        <p className="text-xs text-stone-500 italic">
           Tip: Complete chores and tend your farm daily for maximum rewards!
         </p>
       </div>
