@@ -22,14 +22,21 @@
 During import or in Project Settings → Environment Variables, add:
 
 **Name:** `DATABASE_URL`
-**Value:** `postgresql://neondb_owner:npg_OSy0dipQ2wJz@ep-lively-rain-ad016ucj-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require`
+**Value:** `your-neon-database-url-with-pooling`
 **Environment:** Production, Preview, Development (select all)
 
 **Name:** `DIRECT_URL`
-**Value:** `postgresql://neondb_owner:npg_OSy0dipQ2wJz@ep-lively-rain-ad016ucj.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require`
+**Value:** `your-neon-database-url-without-pooling`
 **Environment:** Production, Preview, Development (select all)
 
 Make sure to click "Add" after each variable!
+
+**Where to find these values:**
+- Go to your Neon dashboard at https://console.neon.tech
+- Select your database project
+- Copy the connection string (it starts with `postgresql://...`)
+- For DATABASE_URL: Use the pooled connection (default)
+- For DIRECT_URL: Use the direct connection (toggle "Pooled connection" off)
 
 ### 3. Build Settings
 
