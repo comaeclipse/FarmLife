@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { CropType } from '@prisma/client';
+import { toast } from 'sonner';
 import { plantCropAction, waterCropAction, harvestCropAction } from '@/app/actions/crops';
 import { expandFarmAction, getNextExpansionTierAction } from '@/app/actions/farm';
 import { CROP_DATA, GAME_CONFIG, FARM_EXPANSION_TIERS } from '@/lib/constants';
@@ -67,7 +68,7 @@ export function FarmGrid({ playerId, crops, inventory, farmRows, farmCols, playe
       setSelectedPlot(null);
       setSelectedCropType(null);
     } else {
-      alert(result.error);
+      toast.error(result.error);
     }
   };
 
@@ -77,7 +78,7 @@ export function FarmGrid({ playerId, crops, inventory, farmRows, farmCols, playe
     setLoading(false);
 
     if (!result.success) {
-      alert(result.error);
+      toast.error(result.error);
     }
   };
 
@@ -89,7 +90,7 @@ export function FarmGrid({ playerId, crops, inventory, farmRows, farmCols, playe
     if (result.success) {
       setSelectedPlot(null);
     } else {
-      alert(result.error);
+      toast.error(result.error);
     }
   };
 
@@ -100,9 +101,9 @@ export function FarmGrid({ playerId, crops, inventory, farmRows, farmCols, playe
 
     if (result.success && result.newSize) {
       setShowExpansion(false);
-      alert(`Farm expanded to ${result.newSize.rows}x${result.newSize.cols} (${result.totalPlots} plots)!`);
+      toast.success(`Farm expanded to ${result.newSize.rows}x${result.newSize.cols} (${result.totalPlots} plots)!`);
     } else {
-      alert(result.error || 'Failed to expand farm');
+      toast.error(result.error || 'Failed to expand farm');
     }
   };
 

@@ -5,6 +5,7 @@ import { CropType } from '@prisma/client';
 import * as cropDb from '@/lib/db/crops';
 import * as playerDb from '@/lib/db/player';
 import * as inventoryDb from '@/lib/db/inventory';
+import * as eventsDb from '@/lib/db/events';
 import { ENERGY_COSTS, XP_REWARDS, CROP_DATA } from '@/lib/constants';
 import { getCropGrowthStage } from '@/lib/game-logic';
 
@@ -150,6 +151,14 @@ export async function harvestCropAction(playerId: string, cropId: string, cropTy
       coins: player.coins + cropData.sellPrice,
       xp: XP_REWARDS.HARVEST_CROP,
     });
+
+    // Log harvest event
+    await eventsDb.createGameEvent(
+      playerId,
+      'PLAYER_ACTION',
+      'Harvest',
+      `Harvested ${cropData.emoji} ${cropData.name} for ${cropData.sellPrice} coins`
+    );
 
     revalidatePath('/');
     return { success: true, earned: cropData.sellPrice };

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
+import * as eventsDb from '@/lib/db/events';
 import { FARM_EXPANSION_TIERS } from '@/lib/constants';
 
 /**
@@ -120,6 +121,14 @@ export async function expandFarmAction(playerId: string) {
         energy: player.energy - nextTier.energyCost,
       },
     });
+
+    // Log event
+    await eventsDb.createGameEvent(
+      playerId,
+      'PLAYER_ACTION',
+      'Farm Expansion',
+      `Expanded farm to ${nextTier.rows}x${nextTier.cols} (${nextTier.rows * nextTier.cols} plots)`
+    );
 
     revalidatePath('/');
     revalidatePath('/crops');

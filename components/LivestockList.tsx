@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { LivestockType } from '@prisma/client';
+import { toast } from 'sonner';
 import { feedAnimalAction, petAnimalAction, collectProductAction, feedAllAnimalsAction } from '@/app/actions/livestock';
 import { LIVESTOCK_DATA } from '@/lib/constants';
 import { Heart, Sparkles, Utensils, Hand, Package } from 'lucide-react';
@@ -31,7 +32,7 @@ export function LivestockList({ playerId, livestock }: LivestockListProps) {
     setLoading(true);
     const result = await feedAnimalAction(playerId, animalId);
     setLoading(false);
-    if (!result.success) alert(result.error);
+    if (!result.success) toast.error(result.error);
   };
 
   const handleFeedAll = async () => {
@@ -39,9 +40,9 @@ export function LivestockList({ playerId, livestock }: LivestockListProps) {
     const result = await feedAllAnimalsAction(playerId);
     setLoading(false);
     if (result.success) {
-      alert(`Fed ${result.fed} animals!`);
+      toast.success(`Fed ${result.fed} animals!`);
     } else {
-      alert(result.error);
+      toast.error(result.error);
     }
   };
 
@@ -49,7 +50,7 @@ export function LivestockList({ playerId, livestock }: LivestockListProps) {
     setLoading(true);
     const result = await petAnimalAction(playerId, animalId);
     setLoading(false);
-    if (!result.success) alert(result.error);
+    if (!result.success) toast.error(result.error);
   };
 
   const handleCollect = async (animalId: string, animalType: LivestockType) => {
@@ -57,9 +58,9 @@ export function LivestockList({ playerId, livestock }: LivestockListProps) {
     const result = await collectProductAction(playerId, animalId, animalType);
     setLoading(false);
     if (result.success) {
-      alert(`Collected! Earned ${result.earned} coins`);
+      toast.success(`Collected! Earned ${result.earned} coins`);
     } else {
-      alert(result.error);
+      toast.error(result.error);
     }
   };
 

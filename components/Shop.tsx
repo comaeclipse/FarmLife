@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { CropType, LivestockType } from '@prisma/client';
+import { toast } from 'sonner';
 import { buySeedsAction, buyFeedAction } from '@/app/actions/shop';
 import { buyAnimalAction } from '@/app/actions/livestock';
 import { CROP_DATA, LIVESTOCK_DATA } from '@/lib/constants';
@@ -22,9 +23,9 @@ export function Shop({ playerId, playerCoins }: ShopProps) {
     setLoading(false);
 
     if (result.success) {
-      alert(`Bought ${quantity} seeds for ${result.spent} coins!`);
+      toast.success(`Bought ${quantity} seeds for ${result.spent} coins!`);
     } else {
-      alert(result.error);
+      toast.error(result.error);
     }
   };
 
@@ -34,9 +35,9 @@ export function Shop({ playerId, playerCoins }: ShopProps) {
     setLoading(false);
 
     if (result.success) {
-      alert(`Bought ${LIVESTOCK_DATA[animalType].name}!`);
+      toast.success(`Bought ${LIVESTOCK_DATA[animalType].name}!`);
     } else {
-      alert(result.error);
+      toast.error(result.error);
     }
   };
 
@@ -46,9 +47,9 @@ export function Shop({ playerId, playerCoins }: ShopProps) {
     setLoading(false);
 
     if (result.success) {
-      alert(`Bought ${quantity} feed for ${result.spent} coins!`);
+      toast.success(`Bought ${quantity} feed for ${result.spent} coins!`);
     } else {
-      alert(result.error);
+      toast.error(result.error);
     }
   };
 

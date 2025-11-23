@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { waterAllCropsAction } from '@/app/actions/crops';
 import { restAction, processDailyUpdateAction } from '@/app/actions/player';
 import { Droplets, Bed, Sunrise, Shovel } from 'lucide-react';
@@ -18,9 +19,9 @@ export function QuickActions({ playerId }: QuickActionsProps) {
     setLoading(false);
 
     if (result.success) {
-      alert(`Watered ${result.watered} crops!`);
+      toast.success(`Watered ${result.watered} crops!`);
     } else {
-      alert(result.error);
+      toast.error(result.error);
     }
   };
 
@@ -30,9 +31,9 @@ export function QuickActions({ playerId }: QuickActionsProps) {
     setLoading(false);
 
     if (result.success) {
-      alert(`Restored ${result.energyRestored} energy!`);
+      toast.success(`Restored ${result.energyRestored} energy!`);
     } else {
-      alert(result.error);
+      toast.error(result.error);
     }
   };
 
@@ -47,12 +48,12 @@ export function QuickActions({ playerId }: QuickActionsProps) {
 
     if (result.success) {
       if (result.event) {
-        alert(`New day started! Event: ${result.event.title} - ${result.event.description}`);
+        toast.success(`New day started! Event: ${result.event.title} - ${result.event.description}`);
       } else {
-        alert('New day started!');
+        toast.success('New day started!');
       }
     } else {
-      alert(result.error);
+      toast.error(result.error);
     }
   };
 

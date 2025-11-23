@@ -5,6 +5,7 @@ import { LivestockType } from '@prisma/client';
 import * as livestockDb from '@/lib/db/livestock';
 import * as playerDb from '@/lib/db/player';
 import * as inventoryDb from '@/lib/db/inventory';
+import * as eventsDb from '@/lib/db/events';
 import { ENERGY_COSTS, XP_REWARDS, LIVESTOCK_DATA } from '@/lib/constants';
 
 /**
@@ -75,6 +76,14 @@ export async function feedAllAnimalsAction(playerId: string) {
       xp: XP_REWARDS.FEED_ALL_ANIMALS,
     });
 
+    // Log event
+    await eventsDb.createGameEvent(
+      playerId,
+      'PLAYER_ACTION',
+      'Animal Care',
+      `Fed all ${unfedAnimals.length} animals`
+    );
+
     revalidatePath('/');
     return { success: true, fed: unfedAnimals.length };
   } catch (error) {
@@ -136,6 +145,14 @@ export async function collectProductAction(
       xp: XP_REWARDS.COLLECT_PRODUCT,
     });
 
+    // Log event
+    await eventsDb.createGameEvent(
+      playerId,
+      'PLAYER_ACTION',
+      'Production',
+      `Collected ${animalData.product} from ${animalData.name} for ${animalData.productValue} coins`
+    );
+
     revalidatePath('/');
     return { success: true, earned: animalData.productValue };
   } catch (error) {
@@ -166,6 +183,14 @@ export async function buyAnimalAction(
 
     await livestockDb.addLivestock(playerId, animalType, name);
     await playerDb.updatePlayerCoins(playerId, player.coins - animalData.cost);
+
+    // Log event
+    await eventsDb.createGameEvent(
+      playerId,
+      'PLAYER_ACTION',
+      'Purchase',
+      `Bought ${animalData.emoji} ${animalData.name} for ${animalData.cost} coins`
+    );
 
     revalidatePath('/');
     return { success: true };

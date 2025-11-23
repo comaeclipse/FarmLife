@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { ResourceType } from '@prisma/client';
 import * as playerDb from '@/lib/db/player';
 import * as inventoryDb from '@/lib/db/inventory';
+import * as eventsDb from '@/lib/db/events';
 import { CROP_DATA } from '@/lib/constants';
 
 /**
@@ -37,6 +38,16 @@ export async function buySeedsAction(
     await inventoryDb.addInventoryItem(playerId, seedType, quantity);
     await playerDb.updatePlayerCoins(playerId, player.coins - totalCost);
 
+    // Log event for bulk purchases
+    if (quantity >= 5) {
+      await eventsDb.createGameEvent(
+        playerId,
+        'PLAYER_ACTION',
+        'Purchase',
+        `Bought ${quantity} ${cropData.emoji} ${cropData.name} seeds for ${totalCost} coins`
+      );
+    }
+
     revalidatePath('/');
     return { success: true, spent: totalCost };
   } catch (error) {
@@ -64,6 +75,16 @@ export async function buyFeedAction(playerId: string, quantity: number) {
 
     await inventoryDb.addInventoryItem(playerId, 'FEED', quantity);
     await playerDb.updatePlayerCoins(playerId, player.coins - totalCost);
+
+    // Log event for bulk purchases
+    if (quantity >= 50) {
+      await eventsDb.createGameEvent(
+        playerId,
+        'PLAYER_ACTION',
+        'Purchase',
+        `Bought ${quantity} animal feed for ${totalCost} coins`
+      );
+    }
 
     revalidatePath('/');
     return { success: true, spent: totalCost };

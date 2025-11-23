@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { completeChoreAction } from '@/app/actions/player';
 
 interface Chore {
@@ -26,9 +27,9 @@ export function ChoresList({ playerId, chores }: ChoresListProps) {
     setLoading(false);
 
     if (result.success && result.rewards) {
-      alert(`Completed! Earned ${result.rewards.coins} coins and ${result.rewards.xp} XP`);
+      toast.success(`Completed! Earned ${result.rewards.coins} coins and ${result.rewards.xp} XP`);
     } else if (!result.success) {
-      alert(result.error);
+      toast.error(result.error);
     }
   };
 
