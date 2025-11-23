@@ -211,3 +211,29 @@ export async function restAction(playerId: string) {
     return { success: false, error: 'Failed to rest' };
   }
 }
+
+/**
+ * Reset player data (delete and recreate fresh)
+ */
+export async function resetPlayerAction(playerId: string) {
+  try {
+    const player = await playerDb.getPlayer(playerId);
+    if (!player) {
+      return { success: false, error: 'Player not found' };
+    }
+
+    const playerName = player.name;
+
+    // Delete the player (cascade will delete all related data)
+    await playerDb.deletePlayer(playerId);
+
+    // Create a fresh player with the same name
+    const newPlayer = await playerDb.getOrCreatePlayer(playerName);
+
+    revalidatePath('/');
+    return { success: true, playerId: newPlayer?.id };
+  } catch (error) {
+    console.error('Error resetting player:', error);
+    return { success: false, error: 'Failed to reset player' };
+  }
+}

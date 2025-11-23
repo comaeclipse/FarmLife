@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { waterAllCropsAction } from '@/app/actions/crops';
-import { restAction, processDailyUpdateAction } from '@/app/actions/player';
-import { Droplets, Bed, Sunrise, Shovel } from 'lucide-react';
+import { restAction, processDailyUpdateAction, resetPlayerAction } from '@/app/actions/player';
+import { Droplets, Bed, Sunrise, Shovel, RotateCcw } from 'lucide-react';
 
 interface QuickActionsProps {
   playerId: string;
@@ -57,6 +57,24 @@ export function QuickActions({ playerId }: QuickActionsProps) {
     }
   };
 
+  const handleReset = async () => {
+    if (!confirm('RESET FARM? This will delete ALL your progress and start fresh with the new flock/horse system. This cannot be undone!')) {
+      return;
+    }
+
+    setLoading(true);
+    const result = await resetPlayerAction(playerId);
+    setLoading(false);
+
+    if (result.success) {
+      toast.success('Farm reset! Starting fresh...');
+      // Force page reload to get new player data
+      window.location.reload();
+    } else {
+      toast.error(result.error);
+    }
+  };
+
   return (
     <div className="bg-stone-800 border border-stone-700 rounded-lg p-4">
       <h3 className="text-sm font-bold text-stone-400 uppercase mb-3 flex items-center gap-2">
@@ -90,6 +108,15 @@ export function QuickActions({ playerId }: QuickActionsProps) {
         >
           <Sunrise size={16} className="text-amber-400" />
           <span>Start New Day</span>
+        </button>
+
+        <button
+          onClick={handleReset}
+          disabled={loading}
+          className="w-full bg-red-900/50 hover:bg-red-800/50 text-left px-3 py-2 rounded flex items-center gap-2 group transition-colors disabled:opacity-50 border border-red-700/50"
+        >
+          <RotateCcw size={16} className="text-red-400" />
+          <span>Reset Farm</span>
         </button>
       </div>
 

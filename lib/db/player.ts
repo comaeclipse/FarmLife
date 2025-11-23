@@ -193,3 +193,12 @@ export async function updatePlayerStats(
     },
   });
 }
+
+/**
+ * Delete a player and all related data (cascade)
+ */
+export async function deletePlayer(playerId: string) {
+  return await prisma.player.delete({
+    where: { id: playerId },
+  });
+}
