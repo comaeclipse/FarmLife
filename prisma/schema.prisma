@@ -1,4 +1,5 @@
-// FarmLife RPG - Database Schema
+// Equine Acres Database Schema
+// PostgreSQL via Neon (serverless)
 
 generator client {
   provider = "prisma-client-js"
@@ -10,282 +11,125 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-// Main player/user model
+// Main player/farm data
 model Player {
-  id        String   @id @default(cuid())
-  name      String
-  energy    Int      @default(100)
-  maxEnergy Int      @default(100)
-  coins     Int      @default(500)
-  xp        Int      @default(0)
-  level     Int      @default(1)
-  farmRows  Int      @default(1)
-  farmCols  Int      @default(1)
+  id       String   @id @default(cuid())
+  farmName String
+
+  // Core stats
+  day       Int @default(1)
+  money     Int @default(1000)
+  energy    Int @default(100)
+  maxEnergy Int @default(100)
+
+  // Livestock counts
+  chickens    Int     @default(0)
+  isFreeRange Boolean @default(false)
+  dairyCows   Int     @default(0)
+  beefCows    Int     @default(0)
+  beefPrice   Int     @default(200)
+  goats       Int     @default(0)
+  pigs        Int     @default(0)
+  pigPrice    Int     @default(120)
+
+  // Daily chore flags
+  hasCollectedEggs   Boolean @default(false)
+  hasMilkedCows      Boolean @default(false)
+  hasMilkedGoats     Boolean @default(false)
+  hasCollectedManure Boolean @default(false)
+
+  // Inventory
+  eggs   Int @default(0)
+  milk   Int @default(0)
+  feed   Int @default(30)
+  manure Int @default(0)
+
+  // Infrastructure
+  cleanliness    Int @default(100)
+  infrastructure Int @default(100)
+
+  // Crops (single field for now)
+  cropGrowth Int      @default(0)
+  activeCrop String?
+  fieldWater Int      @default(50)
+  fieldPests Boolean  @default(false)
+
+  // Game state
+  weather   String @default("Sunny")
+  gameStage String @default("SETUP")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  crops      Crop[]
-  livestock  Livestock[]
-  flocks     Flock[]
-  horses     Horse[]
-  inventory  InventoryItem[]
-  chores     ChoreLog[]
-  events     GameEvent[]
-  gameState  GameState?
+  // Relations
+  horses       Horse[]
+  logs         GameLog[]
+  achievements Achievement[]
+  equipment    Equipment[]
 
   @@map("players")
 }
 
-// Crop types available in the game
-enum CropType {
-  WHEAT
-  CORN
-  TOMATO
-  CARROT
-  POTATO
-  STRAWBERRY
-  PUMPKIN
-  LETTUCE
-}
-
-// Growth stages
-enum GrowthStage {
-  PLANTED
-  SEEDLING
-  GROWING
-  MATURE
-  READY
-  WITHERED
-}
-
-// Crops planted on the farm
-model Crop {
-  id           String       @id @default(cuid())
-  playerId     String
-  type         CropType
-  stage        GrowthStage  @default(PLANTED)
-  plotX        Int
-  plotY        Int
-  plantedAt    DateTime     @default(now())
-  wateredToday Boolean      @default(false)
-  health       Int          @default(100)
-  daysGrowing  Int          @default(0)
-
-  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
-
-  @@unique([playerId, plotX, plotY])
-  @@map("crops")
-}
-
-// Animal types
-enum LivestockType {
-  CHICKEN
-  COW
-  SHEEP
-  PIG
-  GOAT
-}
-
-// Livestock on the farm (DEPRECATED - use Flock or Horse instead)
-model Livestock {
-  id              String        @id @default(cuid())
-  playerId        String
-  type            LivestockType
-  name            String?
-  health          Int           @default(100)
-  happiness       Int           @default(100)
-  hunger          Int           @default(100)
-  fedToday        Boolean       @default(false)
-  petToday        Boolean       @default(false)
-  productionReady Boolean       @default(false)
-  producedToday   Boolean       @default(false)
-  acquiredAt      DateTime      @default(now())
-
-  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
-
-  @@map("livestock")
-}
-
-// Flock animal types (group-based animals)
-enum FlockType {
-  CHICKEN
-  COW
-  SHEEP
-  PIG
-  GOAT
-}
-
-// Flocks/Herds of animals
-model Flock {
-  id              String    @id @default(cuid())
-  playerId        String
-  type            FlockType
-  count           Int       @default(1)
-  maxCount        Int       @default(50)
-  health          Int       @default(100)
-  happiness       Int       @default(100)
-  hunger          Int       @default(100)
-  fedToday        Boolean   @default(false)
-  productionReady Int       @default(0) // Number of animals ready to produce
-  producedToday   Boolean   @default(false)
-  acquiredAt      DateTime  @default(now())
-
-  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
-
-  @@map("flocks")
-}
-
-// Individual horses (premium animals with special care)
+// Individual horses (premium livestock)
 model Horse {
-  id            String   @id @default(cuid())
-  playerId      String
-  name          String   // Required for horses
-  health        Int      @default(100)
-  happiness     Int      @default(100)
-  hunger        Int      @default(100)
-  grooming      Int      @default(100) // Grooming level (decays daily)
-  training      Int      @default(0)   // Training level (0-100)
-  bonding       Int      @default(0)   // Bonding level with player (0-100)
-  fedToday      Boolean  @default(false)
-  groomedToday  Boolean  @default(false)
-  trainedToday  Boolean  @default(false)
-  riddenToday   Boolean  @default(false)
-  acquiredAt    DateTime @default(now())
+  id         String @id @default(cuid())
+  playerId   String
+  name       String
+  isNamed    Boolean @default(false)
+  breed      String
+  age        Int     @default(6) // in months
+  health     Int     @default(100)
+  hunger     Int     @default(0)
+  happiness  Int     @default(100)
+  experience Int     @default(0)
+  level      Int     @default(1)
+  stamina    Int     @default(100)
+  bio        String  @default("")
+  value      Int     @default(500)
+
+  createdAt DateTime @default(now())
 
   player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
 
   @@map("horses")
 }
 
-// Resource types for inventory
-enum ResourceType {
-  // Seeds
-  WHEAT_SEEDS
-  CORN_SEEDS
-  TOMATO_SEEDS
-  CARROT_SEEDS
-  POTATO_SEEDS
-  STRAWBERRY_SEEDS
-  PUMPKIN_SEEDS
-  LETTUCE_SEEDS
-
-  // Harvested crops
-  WHEAT
-  CORN
-  TOMATO
-  CARROT
-  POTATO
-  STRAWBERRY
-  PUMPKIN
-  LETTUCE
-
-  // Animal products
-  EGG
-  MILK
-  WOOL
-  MEAT
-
-  // Tools & items
-  WATER_CAN
-  HOE
-  FEED
-  FERTILIZER
-}
-
-// Player inventory
-model InventoryItem {
-  id        String       @id @default(cuid())
+// Game activity logs
+model GameLog {
+  id        String   @id @default(cuid())
   playerId  String
-  type      ResourceType
-  quantity  Int          @default(1)
+  day       Int
+  message   String
+  type      String   // 'info' | 'success' | 'warning' | 'danger' | 'flavor'
+  createdAt DateTime @default(now())
 
   player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
 
-  @@unique([playerId, type])
-  @@map("inventory")
+  @@index([playerId, day])
+  @@map("game_logs")
 }
 
-// Chore types
-enum ChoreType {
-  WATER_CROPS
-  FEED_ANIMALS
-  HARVEST_CROPS
-  COLLECT_PRODUCTS
-  CLEAR_WEEDS
-  REPAIR_FENCE
+// Unlocked achievements
+model Achievement {
+  id            String   @id @default(cuid())
+  playerId      String
+  achievementId String   // References achievement from config
+  unlockedAt    DateTime @default(now())
+
+  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@unique([playerId, achievementId])
+  @@map("achievements")
 }
 
-// Daily chores and completed tasks
-model ChoreLog {
-  id          String    @id @default(cuid())
+// Player equipment
+model Equipment {
+  id          String @id @default(cuid())
   playerId    String
-  type        ChoreType
-  description String
-  xpReward    Int       @default(10)
-  coinReward  Int       @default(0)
-  completed   Boolean   @default(false)
-  completedAt DateTime?
-  createdAt   DateTime  @default(now())
+  equipmentId String // References equipment from config
 
   player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
 
-  @@map("chore_logs")
-}
-
-// Random event types
-enum EventType {
-  WEATHER
-  VISITOR
-  ANIMAL_EVENT
-  CROP_EVENT
-  MARKET
-  SPECIAL
-  PLAYER_ACTION
-}
-
-// Game events (weather, visitors, etc.)
-model GameEvent {
-  id          String    @id @default(cuid())
-  playerId    String
-  type        EventType
-  title       String
-  description String
-  effect      String?
-  createdAt   DateTime  @default(now())
-
-  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
-
-  @@map("game_events")
-}
-
-// Seasons
-enum Season {
-  SPRING
-  SUMMER
-  FALL
-  WINTER
-}
-
-// Time of day
-enum TimeOfDay {
-  MORNING
-  AFTERNOON
-  EVENING
-  NIGHT
-}
-
-// Game state (time, season, etc.)
-model GameState {
-  id          String    @id @default(cuid())
-  playerId    String    @unique
-  day         Int       @default(1)
-  season      Season    @default(SPRING)
-  year        Int       @default(1)
-  timeOfDay   TimeOfDay @default(MORNING)
-  lastPlayed  DateTime  @default(now())
-  tickerItems Json?
-
-  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
-
-  @@map("game_state")
+  @@unique([playerId, equipmentId])
+  @@map("equipment")
 }
