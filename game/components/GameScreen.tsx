@@ -1,8 +1,9 @@
 
 import React, { useState } from 'react';
-import { 
-  Home, Moon, ClipboardList, Egg, Milk, 
-  ShoppingBag, Beef, Sprout, Tractor, Wheat, LayoutDashboard, Store, PawPrint, Trophy, Sprout as ManureIcon 
+import {
+  Home, Moon, ClipboardList, Egg, Milk,
+  ShoppingBag, Beef, Sprout, Tractor, Wheat, LayoutDashboard, Store, PawPrint, Trophy, Sprout as ManureIcon,
+  Shovel, Hammer, Trash2
 } from 'lucide-react';
 import type {
   GameState, Breed, TutorialProgress, EquipmentId, CropType
@@ -277,7 +278,108 @@ export const GameScreen: React.FC<GameScreenProps> = ({
 
                 {/* RIGHT COLUMN: Quick Actions / Market Summary */}
                 <div className="space-y-6">
-                    
+
+                    {/* Daily Chores */}
+                    <div className="bg-stone-800 border border-stone-700 rounded-lg p-4">
+                        <h3 className="text-sm font-bold text-stone-400 uppercase mb-3 flex items-center gap-2">
+                            <Shovel size={16} /> Daily Chores
+                        </h3>
+
+                        {/* Clean Stables */}
+                        <button
+                            onClick={actions.cleanStable}
+                            disabled={isProcessing || state.cleanliness >= 100 || !!state.activeEvent}
+                            className="w-full bg-stone-700 hover:bg-stone-600 text-left px-3 py-2 rounded mb-2 flex justify-between items-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <div className="flex items-center gap-2">
+                                <Shovel size={14} className="text-stone-400" />
+                                <span className="text-sm">Clean Stables</span>
+                            </div>
+                            <span className="text-xs text-stone-400 bg-stone-900 px-2 py-0.5 rounded">-20 E</span>
+                        </button>
+
+                        {/* Repair Fences */}
+                        <button
+                            onClick={actions.repairFences}
+                            disabled={isProcessing || state.infrastructure >= 100 || !!state.activeEvent}
+                            className="w-full bg-stone-700 hover:bg-stone-600 text-left px-3 py-2 rounded mb-2 flex justify-between items-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <div className="flex items-center gap-2">
+                                <Hammer size={14} className="text-stone-400" />
+                                <span className="text-sm">Repair Fences</span>
+                            </div>
+                            <span className="text-xs text-stone-400 bg-stone-900 px-2 py-0.5 rounded">-30 E</span>
+                        </button>
+
+                        {/* Collect Eggs - Only if chickens > 0 */}
+                        {state.chickens > 0 && (
+                            <button
+                                onClick={actions.collectEggs}
+                                disabled={isProcessing || state.hasCollectedEggs || !!state.activeEvent}
+                                className="w-full bg-stone-700 hover:bg-stone-600 text-left px-3 py-2 rounded mb-2 flex justify-between items-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                <div className="flex items-center gap-2">
+                                    <Egg size={14} className={`text-stone-400 ${state.hasCollectedEggs ? 'opacity-50' : ''}`} />
+                                    <span className={`text-sm ${state.hasCollectedEggs ? 'text-stone-500 line-through' : ''}`}>
+                                        {state.hasCollectedEggs ? 'Eggs Collected' : 'Collect Eggs'}
+                                    </span>
+                                </div>
+                                <span className="text-xs text-stone-400 bg-stone-900 px-2 py-0.5 rounded">-10 E</span>
+                            </button>
+                        )}
+
+                        {/* Collect Manure - Only if chickens > 0 */}
+                        {state.chickens > 0 && (
+                            <button
+                                onClick={actions.collectManure}
+                                disabled={isProcessing || state.hasCollectedManure || !!state.activeEvent}
+                                className="w-full bg-stone-700 hover:bg-stone-600 text-left px-3 py-2 rounded mb-2 flex justify-between items-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                <div className="flex items-center gap-2">
+                                    <Trash2 size={14} className={`text-stone-400 ${state.hasCollectedManure ? 'opacity-50' : ''}`} />
+                                    <span className={`text-sm ${state.hasCollectedManure ? 'text-stone-500 line-through' : ''}`}>
+                                        {state.hasCollectedManure ? 'Manure Collected' : 'Collect Manure'}
+                                    </span>
+                                </div>
+                                <span className="text-xs text-stone-400 bg-stone-900 px-2 py-0.5 rounded">-10 E</span>
+                            </button>
+                        )}
+
+                        {/* Milk Cows - Only if dairyCows > 0 */}
+                        {state.dairyCows > 0 && (
+                            <button
+                                onClick={actions.milkCows}
+                                disabled={isProcessing || state.hasMilkedCows || !!state.activeEvent}
+                                className="w-full bg-stone-700 hover:bg-stone-600 text-left px-3 py-2 rounded mb-2 flex justify-between items-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                <div className="flex items-center gap-2">
+                                    <Milk size={14} className={`text-stone-400 ${state.hasMilkedCows ? 'opacity-50' : ''}`} />
+                                    <span className={`text-sm ${state.hasMilkedCows ? 'text-stone-500 line-through' : ''}`}>
+                                        {state.hasMilkedCows ? 'Cows Milked' : 'Milk Cows'}
+                                    </span>
+                                </div>
+                                <span className="text-xs text-stone-400 bg-stone-900 px-2 py-0.5 rounded">-15 E</span>
+                            </button>
+                        )}
+
+                        {/* Milk Goats - Only if goats > 0 */}
+                        {state.goats > 0 && (
+                            <button
+                                onClick={actions.milkGoats}
+                                disabled={isProcessing || state.hasMilkedGoats || !!state.activeEvent}
+                                className="w-full bg-stone-700 hover:bg-stone-600 text-left px-3 py-2 rounded mb-2 flex justify-between items-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                <div className="flex items-center gap-2">
+                                    <Milk size={14} className={`text-stone-400 ${state.hasMilkedGoats ? 'opacity-50' : ''}`} />
+                                    <span className={`text-sm ${state.hasMilkedGoats ? 'text-stone-500 line-through' : ''}`}>
+                                        {state.hasMilkedGoats ? 'Goats Milked' : 'Milk Goats'}
+                                    </span>
+                                </div>
+                                <span className="text-xs text-stone-400 bg-stone-900 px-2 py-0.5 rounded">-10 E</span>
+                            </button>
+                        )}
+                    </div>
+
                     {/* Market Summary */}
                     <div className="bg-stone-800 border border-stone-700 rounded-lg p-4">
                         <h3 className="text-sm font-bold text-stone-400 uppercase mb-3 flex items-center gap-2">
