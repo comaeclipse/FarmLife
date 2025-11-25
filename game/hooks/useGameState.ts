@@ -1,7 +1,7 @@
 
 import { useState, useCallback } from 'react';
 import type {
-  GameState, Horse, LogEntry, Breed, EquipmentId, CropType
+  GameState, Horse, LogEntry, Breed, EquipmentId, CropType, FarmEvent
 } from '@/types';
 import {
   COST_FEED_UNIT, FEED_PER_UNIT, HORSE_BASE_COST, DAILY_UPKEEP_PER_HORSE,

@@ -17,7 +17,7 @@ export const generateHorseBio = async (name: string, breed: Breed): Promise<stri
       model: MODEL_NAME,
       contents: `Write a short, one-sentence personality description for a ${breed} horse named ${name}. Keep it whimsical but grounded in reality. Max 20 words.`,
     });
-    return response.text.trim();
+    return response.text?.trim() || `A strong ${breed} ready for work.`;
   } catch (error) {
     console.error("Gemini API Error:", error);
     return `A strong ${breed} ready for work.`;
@@ -30,15 +30,15 @@ export const generateHorseName = async (breed: Breed, bio: string): Promise<stri
   try {
     const response = await ai.models.generateContent({
       model: MODEL_NAME,
-      contents: `Generate a single, creative, and prestigious horse name for a ${breed}. 
+      contents: `Generate a single, creative, and prestigious horse name for a ${breed}.
       Context: The horse has this personality: "${bio}".
-      Rules: 
+      Rules:
       1. Max 3 words.
       2. No quotes.
       3. Examples: "Midnight Runner", "Storm Caller", "Velvet Rose", "Thunder's Echo".
       4. Return ONLY the name.`,
     });
-    return response.text.trim().replace(/['"]/g, '');
+    return response.text?.trim().replace(/['"]/g, '') || "Mystic Shadow";
   } catch (error) {
     console.error("Gemini API Error:", error);
     return "Mystic Shadow";
@@ -54,12 +54,12 @@ export const generateDailyReport = async (gameState: GameState): Promise<string>
   try {
     const response = await ai.models.generateContent({
       model: MODEL_NAME,
-      contents: `You are the narrator of a farm text game. 
+      contents: `You are the narrator of a farm text game.
       Context: ${status}
-      Task: Write a short, atmospheric 2-sentence description of the morning on the farm based on the status and weather. 
+      Task: Write a short, atmospheric 2-sentence description of the morning on the farm based on the status and weather.
       If fences are broken, mention it. If animals are plentiful, mention the noise.`,
     });
-    return response.text.trim();
+    return response.text?.trim() || "The sun rises over the fields. It's a new day.";
   } catch (error) {
     return "The sun rises over the fields. It's a new day.";
   }
@@ -102,7 +102,7 @@ export const generateFarmName = async (): Promise<string> => {
       model: MODEL_NAME,
       contents: `Generate a creative, realistic, and evocative name for a horse farm. Use traditional terminology like Creek, Acres, Hills, Meadows, Stables, Farm, Ranch, Paddock, Ridge, Valley. Examples: "Whispering Willow Acres", "Stony Creek Stables", "High Meadow Ranch". Return ONLY the name, no quotes or extra text.`,
     });
-    return response.text.trim();
+    return response.text?.trim() || "Sunny Side Stables";
   } catch (error) {
     console.error("Gemini API Error:", error);
     return "Sunny Side Stables";

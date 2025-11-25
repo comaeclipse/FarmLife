@@ -1,7 +1,8 @@
 
 import React, { useState } from 'react';
 import { ShoppingBag, Wheat, Egg, Milk, Beef, Tractor, Scissors, Flame, Check, Mountain, Box } from 'lucide-react';
-import type { GameState, Breed, EquipmentId } from '@/types';
+import type { GameState, EquipmentId } from '@/types';
+import { Breed } from '@/types';
 import {
     COST_FEED_UNIT, FEED_PER_UNIT, HORSE_BASE_COST,
     COST_CHICKEN_BATCH, COST_COW_DAIRY, COST_COW_BEEF, COST_GOAT, COST_PIG,
