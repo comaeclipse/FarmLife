@@ -21,6 +21,7 @@ import { uid } from '@/utils';
 import { useGameFlow } from './useGameFlow';
 import { useAchievements } from './useAchievements';
 import { useEvents } from './useEvents';
+import { useToast } from '@/lib/contexts/ToastContext';
 
 /**
  * Main game state hook - orchestrates all game logic and state
@@ -43,6 +44,7 @@ export function useGameState() {
 
   const { unlockedAchievements, checkAchievements } = useAchievements(state.unlockedAchievements);
   const { activeEvent, triggerRandomEvent, clearEvent } = useEvents(state.activeEvent);
+  const { showToast } = useToast();
 
   // ---- Logging System ----
   // Helper to add logs safely with a cap
@@ -352,8 +354,10 @@ export function useGameState() {
             }
         }));
         addLog("Purchased a flock of 5 chickens.", 'success');
+        showToast("✓ Purchased 5 chickens!", 'success');
     } else {
         addLog("Not enough money.", 'danger');
+        showToast("Not enough money!", 'danger');
     }
   };
 

@@ -4,6 +4,7 @@ import React from 'react'
 import { useGameState } from '@/lib/hooks/useGameState'
 import { SetupScreen } from '@/game/components/SetupScreen'
 import { GameScreen } from '@/game/components/GameScreen'
+import { ToastProvider } from '@/lib/contexts/ToastContext'
 
 export default function GameApp() {
   const {
@@ -19,24 +20,28 @@ export default function GameApp() {
 
   if (state.gameStage === 'SETUP') {
     return (
-      <SetupScreen
-        farmNameInput={farmNameInput}
-        onFarmNameChange={setFarmNameInput}
-        onGenerateFarmName={actions.handleGenerateFarmName}
-        onStartGame={actions.startGame}
-        isProcessing={isProcessing}
-      />
+      <ToastProvider>
+        <SetupScreen
+          farmNameInput={farmNameInput}
+          onFarmNameChange={setFarmNameInput}
+          onGenerateFarmName={actions.handleGenerateFarmName}
+          onStartGame={actions.startGame}
+          isProcessing={isProcessing}
+        />
+      </ToastProvider>
     )
   }
 
   return (
-    <GameScreen
-      state={state}
-      tutorialProgress={tutorialProgress}
-      showTutorial={showTutorial}
-      onToggleTutorial={setShowTutorial}
-      isProcessing={isProcessing}
-      actions={actions}
-    />
+    <ToastProvider>
+      <GameScreen
+        state={state}
+        tutorialProgress={tutorialProgress}
+        showTutorial={showTutorial}
+        onToggleTutorial={setShowTutorial}
+        isProcessing={isProcessing}
+        actions={actions}
+      />
+    </ToastProvider>
   )
 }

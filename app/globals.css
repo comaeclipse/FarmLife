@@ -3,10 +3,22 @@
 @theme {
   --font-mono-game: 'Courier New', monospace;
   --animate-marquee: marquee 30s linear infinite;
+  --animate-slide-in: slide-in 0.3s ease-out;
 
   @keyframes marquee {
     0% { transform: translateX(0%); }
     100% { transform: translateX(-50%); }
+  }
+
+  @keyframes slide-in {
+    from {
+      transform: translateX(400px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
   }
 }
 
