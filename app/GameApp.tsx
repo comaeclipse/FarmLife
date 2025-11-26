@@ -7,6 +7,15 @@ import { GameScreen } from '@/game/components/GameScreen'
 import { ToastProvider } from '@/lib/contexts/ToastContext'
 
 export default function GameApp() {
+  // Provide toast context before any hooks call useToast (inside useGameState)
+  return (
+    <ToastProvider>
+      <GameAppContent />
+    </ToastProvider>
+  )
+}
+
+function GameAppContent() {
   const {
     state,
     farmNameInput,
@@ -20,28 +29,24 @@ export default function GameApp() {
 
   if (state.gameStage === 'SETUP') {
     return (
-      <ToastProvider>
-        <SetupScreen
-          farmNameInput={farmNameInput}
-          onFarmNameChange={setFarmNameInput}
-          onGenerateFarmName={actions.handleGenerateFarmName}
-          onStartGame={actions.startGame}
-          isProcessing={isProcessing}
-        />
-      </ToastProvider>
+      <SetupScreen
+        farmNameInput={farmNameInput}
+        onFarmNameChange={setFarmNameInput}
+        onGenerateFarmName={actions.handleGenerateFarmName}
+        onStartGame={actions.startGame}
+        isProcessing={isProcessing}
+      />
     )
   }
 
   return (
-    <ToastProvider>
-      <GameScreen
-        state={state}
-        tutorialProgress={tutorialProgress}
-        showTutorial={showTutorial}
-        onToggleTutorial={setShowTutorial}
-        isProcessing={isProcessing}
-        actions={actions}
-      />
-    </ToastProvider>
+    <GameScreen
+      state={state}
+      tutorialProgress={tutorialProgress}
+      showTutorial={showTutorial}
+      onToggleTutorial={setShowTutorial}
+      isProcessing={isProcessing}
+      actions={actions}
+    />
   )
 }
